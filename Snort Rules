@@ -1,0 +1,7 @@
+# Takes the file data, looks for "var code = " the decodes the first 12 bytes and looks for "MZ" --> Executable file header
+#You might want to use regex for "code" for [a-zA-Z0-9] because this is a variable name
+alert tcp any any -> any any (msg:"Possible CactusTorch"; sid: 1000001; file_data; fast_pattern:only; file_data; pcre:"/var\scode\s?\=\s?\"/"; base64_decode: bytes 12, relative; base64_data; content:"MZ";)
+
+
+# Looks for "System.Text.ASCIIEncoding" which converts unicode to ASCII
+alert tcp any any -> any any (msg:"ASCII Encoding VBS/HTA/VBE in traffic"; sid:1000002; content:"System.Text.ASCIIEncoding";)
